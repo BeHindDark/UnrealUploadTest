@@ -2,14 +2,10 @@
 	"BuildId": "8386587",
 	"Modules": 
 	{
-<<<<<<< HEAD
-		"UnrealUploadTest": "UE4Editor-UnrealUploadTest-0002.dll"
-=======
-		"KJS": "UE4Editor-KJS-0001.dll",
-		"LCH": "UE4Editor-LCH-0001.dll",
-		"OHS": "UE4Editor-OHS-0001.dll",
-		"UnrealUploadTest": "UE4Editor-UnrealUploadTest-0001.dll",
-		"WJT": "UE4Editor-WJT-0001.dll"
->>>>>>> bf7fecfbc468f0883866ec710297ded4058af17b
+		"KJS": "UE4Editor-KJS.dll",
+		"LCH": "UE4Editor-LCH.dll",
+		"OHS": "UE4Editor-OHS.dll",
+		"UnrealUploadTest": "UE4Editor-UnrealUploadTest.dll",
+		"WJT": "UE4Editor-WJT.dll"
 	}
 }
