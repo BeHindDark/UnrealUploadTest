@@ -9,6 +9,6 @@ public class UnrealUploadTestEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 
-		ExtraModuleNames.AddRange( new string[] { "UnrealUploadTest" } );
+		ExtraModuleNames.AddRange( new string[] { "UnrealUploadTest", "OHS", "WJT", "KJS", "LCH" } );
 	}
 }

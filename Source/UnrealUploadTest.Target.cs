@@ -9,6 +9,6 @@ public class UnrealUploadTestTarget : TargetRules
 	{
 		Type = TargetType.Game;
 
-		ExtraModuleNames.AddRange( new string[] { "UnrealUploadTest" } );
+		ExtraModuleNames.AddRange( new string[] { "UnrealUploadTest", "OHS", "WJT", "KJS", "LCH" } );
 	}
 }
