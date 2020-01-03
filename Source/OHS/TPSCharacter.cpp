@@ -53,12 +53,12 @@ void ATPSCharacter::Tick(float DeltaTime)
   //control
   if(CameraPitchMovement!=0.0f)
   {
-    TPCamera->AddRelativeRotation(FRotator(CameraPitchMovement*DeltaTime, 0.0f, 0.0f));
+    TPCamera->AddRelativeRotation(FRotator(CameraPitchMovement*DeltaTime*50, 0.0f, 0.0f));
   }
 
   if(CameraYawMovement!=0.0f)
   {
-    SpringArm->AddRelativeRotation(FRotator(0.0f, CameraYawMovement*DeltaTime, 0.0f));
+    SpringArm->AddRelativeRotation(FRotator(0.0f, CameraYawMovement*DeltaTime*50, 0.0f));
   }
   
 }
@@ -67,55 +67,55 @@ void ATPSCharacter::Tick(float DeltaTime)
 void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-  
-  //Axis Binding
-  PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ATPSCharacter::TurnCamera);
-  PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &ATPSCharacter::LookUp);
-  PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATPSCharacter::MoveFrontBack);
-  PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ATPSCharacter::MoveRightLeft);
-  PlayerInputComponent->BindAxis(TEXT("TurnBody"), this, &ATPSCharacter::TurnCharacter);
+    
+    //Axis Binding
+    PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ATPSCharacter::TurnCamera);
+    PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &ATPSCharacter::LookUp);
+    PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATPSCharacter::MoveFrontBack);
+    PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ATPSCharacter::MoveRightLeft);
+    PlayerInputComponent->BindAxis(TEXT("TurnBody"), this, &ATPSCharacter::TurnCharacter);
 }
 
 //mouse Y : TPCamera Peach Controll
 void ATPSCharacter::LookUp(float NewAxisValue)
 {
-  if(FMath::IsNearlyEqual(NewAxisValue,0.0f))
-  {
-    CameraPitchMovement = 0.0f;
-  }
-  else
-  {
-    CameraPitchMovement = CameraPitchSpeed*NewAxisValue;
-  }
+    if(FMath::IsNearlyEqual(NewAxisValue,0.0f))
+    {
+        CameraPitchMovement = 0.0f;
+    }
+    else
+    {
+        CameraPitchMovement = CameraPitchSpeed*NewAxisValue;
+    }
 }
 
 //mouse X : TPCamera Yaw Controll
 void ATPSCharacter::TurnCamera(float NewAxisValue)
 {
-  if(FMath::IsNearlyEqual(NewAxisValue,0.0f))
-  {
-    CameraYawMovement = 0.0f;
-  }
-  else
-  {
-    CameraYawMovement = CameraYawSpeed*NewAxisValue;
-  }
+    if(FMath::IsNearlyEqual(NewAxisValue,0.0f))
+    {
+        CameraYawMovement = 0.0f;
+    }
+    else
+    {
+        CameraYawMovement = CameraYawSpeed*NewAxisValue;
+    }
 }
 
 //WS : MoveForward or Backward
 void ATPSCharacter::MoveFrontBack(float NewAxisValue)
 {
-  AddMovementInput(GetActorForwardVector(),NewAxisValue);
+    AddMovementInput(GetActorForwardVector(),NewAxisValue);
 }
 
 //AD : Move Right or Left
 void ATPSCharacter::MoveRightLeft(float NewAxisValue)
 {
-  AddMovementInput(GetActorRightVector(),NewAxisValue);
+    AddMovementInput(GetActorRightVector(),NewAxisValue);
 }
 
 //QE : Character Yaw Controll
 void ATPSCharacter::TurnCharacter(float NewAxisValue)
 {
-  AddControllerYawInput(NewAxisValue);
+    AddControllerYawInput(NewAxisValue*50);
 }
