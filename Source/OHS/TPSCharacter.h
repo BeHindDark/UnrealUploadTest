@@ -21,6 +21,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+  virtual void PossessedBy(AController* NewController) override;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -40,16 +42,30 @@ public:
   UPROPERTY(VisibleAnywhere, Category = CollisionBox)
   UBoxComponent* BoxCollision;
 
+  UPROPERTY(VisibleAnywhere, Category = Controller)
+  APlayerController* PlayerController;
+
 protected:
-  //UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
+  UPROPERTY(EditAnywhere, Category = Camera)
   float CameraYawSpeed;
 
-  //UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
+  UPROPERTY(EditAnywhere, Category = Camera)
   float CameraPitchSpeed;
+
+  UPROPERTY(EditAnywhere, Category = FireControlSystem)
+  float Zeroing;
+
+  UPROPERTY(EditAnywhere, Category = FireControlSystem)
+  float AimingRange;
 
 private:
   float CameraYawMovement;
   float CameraPitchMovement;
+  bool bIsPlayerControlling;
+  const USkeletalMeshSocket* TopWeaponSocket;
+
+  UPROPERTY(VisibleAnywhere, Category = FireControlSystem, Meta = (AllowPrivateAccess = true))
+  FVector AimingLocation;
 
   //custom functions
 private:

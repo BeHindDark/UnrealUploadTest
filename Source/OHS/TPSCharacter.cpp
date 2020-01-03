@@ -2,6 +2,7 @@
 
 
 #include "TPSCharacter.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ATPSCharacter::ATPSCharacter()
@@ -25,8 +26,13 @@ ATPSCharacter::ATPSCharacter()
   SpringArm->SocketOffset = FVector(0.0f, 0.0f, 300.0f);
   BoxCollision->SetRelativeLocation(FVector(-10.0f, 0.0f, 30.0f));
   BoxCollision->SetBoxExtent(FVector(150.0f, 150.0f, 50.0f));
-  CameraYawSpeed = 3.0f;
-  CameraPitchSpeed = 3.0f;
+  CameraYawSpeed = 120.0f;
+  CameraPitchSpeed = 60.0f;
+  
+  SpringArm->bInheritPitch = false;
+  SpringArm->bInheritYaw = false;
+  SpringArm->bInheritRoll = false;
+  TPCamera->bUsePawnControlRotation=false;
 
   //Load SkeletalMesh
   static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_SpiderMid(TEXT("/Game/Mech_Constructor_Spiders/Meshes_Skeletal/Legs_Spiders/Legs_Spider_Med.Legs_Spider_Med"));
@@ -37,6 +43,14 @@ ATPSCharacter::ATPSCharacter()
 
   //Load AnimationBlueprint
 
+
+  //SetDefaults
+
+  //FireControlSystem Defaults
+  Zeroing = 1000.0f;
+  AimingRange = 10000.0f;
+  AimingLocation = FVector::ZeroVector;
+  TopWeaponSocket = GetMesh()->GetSocketByName(TEXT("Mount_Top"));
 }
 
 // Called when the game starts or when spawned
@@ -45,20 +59,62 @@ void ATPSCharacter::BeginPlay()
 	Super::BeginPlay();
 }
 
+void ATPSCharacter::PossessedBy(AController * NewController)
+{
+  Super::PossessedBy(NewController);
+  if(IsPlayerControlled())
+  {
+    PlayerController = Cast<APlayerController>(GetController());
+    if(PlayerController!=nullptr)
+    {
+      bIsPlayerControlling = true;
+    }
+  }
+}
+
 // Called every frame
 void ATPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-  //control
-  if(CameraPitchMovement!=0.0f)
-  {
-    TPCamera->AddRelativeRotation(FRotator(CameraPitchMovement*DeltaTime, 0.0f, 0.0f));
-  }
+  //Camera Control
+  TPCamera->AddRelativeRotation(FRotator(CameraPitchMovement*DeltaTime, 0.0f, 0.0f));
+  SpringArm->AddRelativeRotation(FRotator(0.0f, CameraYawMovement*DeltaTime, 0.0f));
 
-  if(CameraYawMovement!=0.0f)
+  //Get Aimming Target Location
+
+  /*
+  APlayerCameraManager *camManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
+  FVector camLocation = camManager->GetCameraLocation();
+  FVector camForward  = camManager->GetCameraRotation().Vector();
+  */
+  if(bIsPlayerControlling)
   {
-    SpringArm->AddRelativeRotation(FRotator(0.0f, CameraYawMovement*DeltaTime, 0.0f));
+    FHitResult AimResult;
+    FVector AimStart;
+    FVector AimDirection;
+    //PlayerController->GetPlayerViewPoint(AimStart, AimRotation);
+    AimStart = TPCamera->GetComponentLocation();
+    AimDirection = TPCamera->GetForwardVector();
+    FVector AimEnd = AimStart + AimDirection*AimingRange;
+    FCollisionQueryParams AimParams;
+    
+    //DrawDebugLine(GetWorld(),AimStart,AimEnd,FColor::Green,false,1,0,1);
+
+    bool IsHit = GetWorld()->LineTraceSingleByChannel(AimResult,AimStart,AimEnd,ECC_Visibility,AimParams);
+    if(IsHit)
+    {
+      if(AimResult.bBlockingHit)
+      {
+        AimingLocation = AimResult.ImpactPoint;
+        UE_LOG(OHS, Warning, TEXT("AimingLocation : %s"), *AimingLocation.ToString());
+      }
+    }
+    else
+    {
+      AimingLocation = AimEnd;
+      UE_LOG(OHS,Warning,TEXT("Look At the Sky"));
+    }
   }
   
 }
@@ -79,27 +135,13 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 //mouse Y : TPCamera Peach Controll
 void ATPSCharacter::LookUp(float NewAxisValue)
 {
-  if(FMath::IsNearlyEqual(NewAxisValue,0.0f))
-  {
-    CameraPitchMovement = 0.0f;
-  }
-  else
-  {
-    CameraPitchMovement = CameraPitchSpeed*NewAxisValue;
-  }
+  CameraPitchMovement = CameraPitchSpeed*NewAxisValue;
 }
 
 //mouse X : TPCamera Yaw Controll
 void ATPSCharacter::TurnCamera(float NewAxisValue)
 {
-  if(FMath::IsNearlyEqual(NewAxisValue,0.0f))
-  {
-    CameraYawMovement = 0.0f;
-  }
-  else
-  {
-    CameraYawMovement = CameraYawSpeed*NewAxisValue;
-  }
+  CameraYawMovement = CameraYawSpeed*NewAxisValue;
 }
 
 //WS : MoveForward or Backward
