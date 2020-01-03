@@ -41,11 +41,11 @@ public:
   UBoxComponent* BoxCollision;
 
 protected:
-  UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
-  float CameraYawSpeed = 3.0;
+  //UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
+  float CameraYawSpeed;
 
-  UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
-  float CameraPitchSpeed = 3.0;
+  //UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
+  float CameraPitchSpeed;
 
 private:
   float CameraYawMovement;
