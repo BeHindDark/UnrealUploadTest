@@ -4,8 +4,8 @@
 
 #include "EngineMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "WJTTpsPawn.generated.h"
 #include "WJT.h"
+#include "WJTTpsPawn.generated.h"
 
 UCLASS()
 class WJT_API AWJTTpsPawn : public APawn
