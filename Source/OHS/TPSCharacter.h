@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "EngineMinimal.h"
+#include "OHS/OHS.h"
 #include "GameFramework/Character.h"
 #include "TPSCharacter.generated.h"
 
@@ -26,6 +27,52 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+  //Ä¿½ºÅÒ º¯¼ö
+public:
+  // public variables
 
+  UPROPERTY(VisibleAnywhere, Category = Camera)
+  USpringArmComponent* SpringArm;
 
+  UPROPERTY(VisibleAnywhere, Category = Camera)
+  UCameraComponent* TPCamera;
+
+  UPROPERTY(VisibleAnywhere, Category = CollisionBox)
+  UBoxComponent* BoxCollision;
+
+protected:
+  UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
+  float CameraYawSpeed = 3.0;
+
+  UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
+  float CameraPitchSpeed = 3.0;
+
+private:
+  float CameraYawMovement;
+  float CameraPitchMovement;
+
+  //custom functions
+private:
+  //private custom functions
+
+  //player Axis input functions
+  
+  //mouse Y : TPCamera Peach Controll
+  void LookUp(float NewAxisValue);
+
+  //mouse X : TPCamera Yaw Controll
+  void TurnCamera(float NewAxisValue);
+  
+  //WS : MoveForward or Backward
+  void MoveFrontBack(float NewAxisValue);
+
+  //AD : Move Right or Left
+  void MoveRightLeft(float NewAxisValue);
+
+  //QE : Character Yaw Controll
+  void TurnCharacter(float NewAxisValue);
+
+  //player Action input functions
+
+  
 };
