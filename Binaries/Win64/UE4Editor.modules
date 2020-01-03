@@ -6,6 +6,10 @@
 		"LCH": "UE4Editor-LCH.dll",
 		"OHS": "UE4Editor-OHS.dll",
 		"UnrealUploadTest": "UE4Editor-UnrealUploadTest.dll",
+<<<<<<< Updated upstream
 		"WJT": "UE4Editor-WJT.dll"
+=======
+		"WJT": "UE4Editor-WJT-3647.dll"
+>>>>>>> Stashed changes
 	}
 }
