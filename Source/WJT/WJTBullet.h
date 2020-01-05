@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "EngineMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WJTBullet.generated.h"
 
@@ -23,7 +23,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collision, Meta = (AllowtoAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collision)
 	UStaticMeshComponent* Mesh;
-	 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	UCameraComponent* Cameral;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	USpringArmComponent* SpringArm;
 };
