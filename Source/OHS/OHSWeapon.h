@@ -23,8 +23,25 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+  virtual void SetOwner(AActor* NewOwner) override;
+
 public:
   UPROPERTY(VisibleAnywhere, Category = Weapon)
   USkeletalMeshComponent* WeaponMesh;
 
+  UPROPERTY(VisibleAnywhere, Category = Weapon)
+  USceneComponent* Sceneroot;
+
+  UPROPERTY(VisibleAnywhere, Category = FireControl)
+  FVector TargetLocation;
+
+protected:
+  UPROPERTY(EditAnywhere, Category = Weapon)
+  float YawRotationSpeed;
+
+  UPROPERTY(EditAnywhere, Category = Weapon)
+  float PitchRotationSpeed;
+
+private:
+  class ATPSCharacter* TPSCharacter;
 };

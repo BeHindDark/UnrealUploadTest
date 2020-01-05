@@ -3,6 +3,7 @@
 
 #include "TPSCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "OHSWeapon.h"
 
 // Sets default values
 ATPSCharacter::ATPSCharacter()
@@ -46,17 +47,31 @@ ATPSCharacter::ATPSCharacter()
 
   //SetDefaults
 
+  //Set Sockets
+  TopWeaponSocket = GetMesh()->GetSocketByName(TEXT("Mount_Top"));
+
+ 
   //FireControlSystem Defaults
   Zeroing = 1000.0f;
   AimingRange = 10000.0f;
   AimingLocation = FVector::ZeroVector;
-  TopWeaponSocket = GetMesh()->GetSocketByName(TEXT("Mount_Top"));
+  
 }
 
 // Called when the game starts or when spawned
 void ATPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+  //Attach Weapon
+  auto DefaultWeapon = GetWorld()->SpawnActor<AOHSWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+  if(DefaultWeapon != nullptr)
+  {
+    DefaultWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TopWeaponSocket->SocketName);
+    DefaultWeapon->SetOwner(this);
+    UE_LOG(OHS, Warning, TEXT("Weapon( %s ) Attached to Owner ( %s )"), *DefaultWeapon->GetName(), *DefaultWeapon->GetOwner()->GetName());
+    WeaponArray.Add(DefaultWeapon);
+  }
 }
 
 void ATPSCharacter::PossessedBy(AController * NewController)
@@ -107,16 +122,20 @@ void ATPSCharacter::Tick(float DeltaTime)
       if(AimResult.bBlockingHit)
       {
         AimingLocation = AimResult.ImpactPoint;
-        UE_LOG(OHS, Warning, TEXT("AimingLocation : %s"), *AimingLocation.ToString());
+        //UE_LOG(OHS, Warning, TEXT("AimingLocation : %s"), *AimingLocation.ToString());
       }
     }
     else
     {
       AimingLocation = AimEnd;
-      UE_LOG(OHS,Warning,TEXT("Look At the Sky"));
+      //UE_LOG(OHS,Warning,TEXT("Look At the Sky"));
     }
   }
-  
+
+  for(AOHSWeapon* Weapon : WeaponArray)
+  {
+    Weapon->TargetLocation = AimingLocation;
+  }
 }
 
 // Called to bind functionality to input

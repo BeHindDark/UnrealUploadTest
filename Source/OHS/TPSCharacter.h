@@ -67,6 +67,8 @@ private:
   UPROPERTY(VisibleAnywhere, Category = FireControlSystem, Meta = (AllowPrivateAccess = true))
   FVector AimingLocation;
 
+  TArray<class AOHSWeapon*> WeaponArray;
+
   //custom functions
 private:
   //private custom functions
