@@ -35,6 +35,12 @@ public:
   UPROPERTY(VisibleAnywhere, Category = FireControl)
   FVector TargetLocation;
 
+  UPROPERTY(VisibleAnywhere, Category = FireControl)
+  bool bLocked;
+
+  UPROPERTY(VisibleAnywhere, Category = FireControl)
+  bool bEquality;
+
 protected:
   UPROPERTY(EditAnywhere, Category = Weapon)
   float YawRotationSpeed;
