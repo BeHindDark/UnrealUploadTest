@@ -45,17 +45,67 @@ void AOHSWeapon::BeginPlay()
 void AOHSWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+  //지금은 본체인 TPSCharacter의 포인터를 갖고 있는지를 따지지만
+  //나중엔 FireControlSystem이라는 ActorComponent로부터 값을 받아올 예정
   if(TPSCharacter!=nullptr)
   {
-    auto BodyRotation = TPSCharacter->GetActorRotation();
-    auto CurRelativeRotation = GetActorRotation()- BodyRotation;
-    auto TargetDirection = (TargetLocation - GetActorLocation()).Rotation();
-    auto TargetRelativeRotation = TargetDirection - BodyRotation;
-    auto RestrictedRelativeRotation = FRotator(TargetRelativeRotation.Pitch, TargetRelativeRotation.Yaw, 0.0f);
-    auto DeltaRotation = FRotator((RestrictedRelativeRotation - CurRelativeRotation).GetNormalized().Pitch*PitchRotationSpeed*DeltaTime,(RestrictedRelativeRotation - CurRelativeRotation).GetNormalized().Yaw*YawRotationSpeed*DeltaTime, 0.0f);
-    SetActorRelativeRotation(CurRelativeRotation + DeltaRotation);
-    //AddActorLocalRotation(DeltaRotation);
-    //FMath::Clamp(TargetDirection - BodyRotation, FRotator(-10.0f, -90.0f, 0.0f), FRotator(50.0f, 90.0f, 0.0f))
+    //포탑이 바라봐야 하는 방향 (rotation()을 쓰면 roll은 무조건 0이 나온다)
+    FRotator TargetDirection = (TargetLocation - GetActorLocation()).Rotation();
+
+    //현재 본체의 방향
+    FRotator BodyRotation = TPSCharacter->GetActorRotation();
+
+    //목표지점을 바라보기 위한 포탑의 상대회전 값
+    FRotator TargetRelativeRotation = FRotator(FMath::ClampAngle(TargetDirection.Pitch - BodyRotation.Pitch,-20.0f,60.0f),
+                                               TargetDirection.Yaw - BodyRotation.Yaw,
+                                               0.0f);
+
+    //이미 해당 방향 인근을 바라보고 있다면 굳이 열심히 계산하지 말고 걍 그쪽으로 정렬시키기
+    if(TargetDirection.Equals(GetActorRotation(),0.0001f))
+    {
+      SetActorRelativeRotation(TargetRelativeRotation);
+      bLocked = true;
+    }
+    else
+    {
+      //현재 본체에 대한 상대회전
+      FRotator CurRelativeRotation = GetActorRotation()- BodyRotation;
+
+      //타겟을 바라보게 하기 위해 회전시켜야 하는 총각도
+      FRotator RotationDiff = TargetRelativeRotation - CurRelativeRotation;
+
+      //실제로 돌릴각도 (빈 공간)
+      FRotator DeltaRotation = FRotator::ZeroRotator;
+
+      //돌릴 Pitch값을 정한다.
+      if(FMath::Abs(RotationDiff.Pitch)<=PitchRotationSpeed*DeltaTime)
+      {
+        //만약 회전시켜야 하는 총각도가 회전속도*DeltaTime 보다 작으면, 그대로 돌린다.
+        DeltaRotation.Pitch = RotationDiff.Pitch;
+      }
+      else
+      {
+        //회전시켜야 하는 총각도가 회전속도*DeltaTime보다 크면, 회전속도에 맞게끔 방향만 맞춰서 돌린다.
+        DeltaRotation.Pitch = FMath::Sign(RotationDiff.Pitch)*PitchRotationSpeed*DeltaTime;
+      }
+
+      //Yaw도 마찬가지로 돌릴각도를 정한다.
+      if(FMath::Abs(RotationDiff.Yaw)<=PitchRotationSpeed*DeltaTime)
+      {
+        DeltaRotation.Yaw = RotationDiff.Yaw;
+      }
+      else
+      {
+        DeltaRotation.Yaw = FMath::Sign(RotationDiff.Yaw)*YawRotationSpeed*DeltaTime;
+      }
+
+      //현재상대회전 + 돌릴각도 = 새 상대회전
+      SetActorRelativeRotation(CurRelativeRotation + DeltaRotation);
+      bLocked = false;
+    }
+    //AddActorWorldRotation(DeltaRotation);
+    
   }
 }
 
