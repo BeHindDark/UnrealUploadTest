@@ -4,6 +4,7 @@
 #include "TPSCharacter.h"
 #include "DrawDebugHelpers.h"
 #include "OHSWeapon.h"
+#include "FireControlSystem.h"
 
 // Sets default values
 ATPSCharacter::ATPSCharacter()
@@ -15,6 +16,7 @@ ATPSCharacter::ATPSCharacter()
   SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
   TPCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
   BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BOXCOLLISION"));
+  FireControlSystem = CreateDefaultSubobject<UFireControlSystem>(TEXT("FIRECONTROLSYSTEM"));
 
   //°èÃþ±¸Á¶
   SpringArm->SetupAttachment(GetCapsuleComponent());
@@ -55,6 +57,7 @@ ATPSCharacter::ATPSCharacter()
   Zeroing = 1000.0f;
   AimingRange = 10000.0f;
   AimingLocation = FVector::ZeroVector;
+   
   
 }
 
@@ -64,13 +67,27 @@ void ATPSCharacter::BeginPlay()
 	Super::BeginPlay();
 
   //Attach Weapon
-  auto DefaultWeapon = GetWorld()->SpawnActor<AOHSWeapon>(FVector::ZeroVector, FRotator::ZeroRotator);
+  
+}
+
+void ATPSCharacter::OnConstruction(const FTransform & Transform)
+{
+  Super::OnConstruction(Transform);
+}
+
+void ATPSCharacter::PostInitializeComponents()
+{
+  Super::PostInitializeComponents();
+
+  auto DefaultWeapon = GetWorld()->SpawnActor<AOHSWeapon>(FVector::ZeroVector,FRotator::ZeroRotator);
   if(DefaultWeapon != nullptr)
   {
-    DefaultWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TopWeaponSocket->SocketName);
+    DefaultWeapon->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,TopWeaponSocket->SocketName);
     DefaultWeapon->SetOwner(this);
-    UE_LOG(OHS, Warning, TEXT("Weapon( %s ) Attached to Owner ( %s )"), *DefaultWeapon->GetName(), *DefaultWeapon->GetOwner()->GetName());
+    UE_LOG(OHS,Warning,TEXT("Weapon( %s ) Attached to Owner ( %s )"),*DefaultWeapon->GetName(),*DefaultWeapon->GetOwner()->GetName());
     WeaponArray.Add(DefaultWeapon);
+    FireControlSystem->WeaponArray.Add(DefaultWeapon);
+    DefaultWeapon->ConnectFireControlSystem(FireControlSystem);
   }
 }
 

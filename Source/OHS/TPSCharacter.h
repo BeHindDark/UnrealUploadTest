@@ -21,6 +21,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+  virtual void OnConstruction(const FTransform& Transform) override;
+
+  virtual void PostInitializeComponents() override;
+
   virtual void PossessedBy(AController* NewController) override;
 
 	// Called every frame
@@ -44,6 +48,9 @@ public:
 
   UPROPERTY(VisibleAnywhere, Category = Controller)
   APlayerController* PlayerController;
+
+  UPROPERTY(VisibleAnywhere, Category = FireControlSystem)
+  class UFireControlSystem* FireControlSystem;
 
 protected:
   UPROPERTY(EditAnywhere, Category = Camera)
