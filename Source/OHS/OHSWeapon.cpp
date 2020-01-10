@@ -2,7 +2,7 @@
 
 
 #include "OHSWeapon.h"
-#include "TPSCharacter.h"
+#include "FireControlSystem.h"
 
 // Sets default values
 AOHSWeapon::AOHSWeapon()
@@ -48,18 +48,19 @@ void AOHSWeapon::Tick(float DeltaTime)
 
   //지금은 본체인 TPSCharacter의 포인터를 갖고 있는지를 따지지만
   //나중엔 FireControlSystem이라는 ActorComponent로부터 값을 받아올 예정
-  if(TPSCharacter!=nullptr)
+  if(FireControlSystem!=nullptr)
   {
+    TargetLocation = FireControlSystem->TargetLocation;
     //포탑이 바라봐야 하는 방향 (rotation()을 쓰면 roll은 무조건 0이 나온다)
     FRotator TargetDirection = (TargetLocation - GetActorLocation()).Rotation();
 
     //현재 본체의 방향
-    FRotator BodyRotation = TPSCharacter->GetActorRotation();
+    FRotator BodyRotation = FireControlSystem->BodyRotation;
 
     //목표지점을 바라보기 위한 포탑의 상대회전 값
     FRotator TargetRelativeRotation = FRotator(FMath::ClampAngle(TargetDirection.Pitch - BodyRotation.Pitch,-20.0f,60.0f),
-                                               TargetDirection.Yaw - BodyRotation.Yaw,
-                                               0.0f);
+                                                TargetDirection.Yaw - BodyRotation.Yaw,
+                                                0.0f);
 
     //이미 해당 방향 인근을 바라보고 있다면 굳이 열심히 계산하지 말고 걍 그쪽으로 정렬시키기
     if(TargetDirection.Equals(GetActorRotation(),0.0001f))
@@ -105,13 +106,25 @@ void AOHSWeapon::Tick(float DeltaTime)
       bLocked = false;
     }
     //AddActorWorldRotation(DeltaRotation);
-    
   }
+
 }
 
 void AOHSWeapon::SetOwner(AActor * NewOwner)
 {
   Super::SetOwner(NewOwner);
-  TPSCharacter = Cast<ATPSCharacter>(NewOwner);
 }
 
+void AOHSWeapon::ConnectFireControlSystem(UFireControlSystem * NewFireControlSystem)
+{
+  if(NewFireControlSystem!=nullptr)
+  {
+    FireControlSystem = NewFireControlSystem;
+    NewFireControlSystem->OnFireOrder.AddUObject(this, &AOHSWeapon::OnFireOrder);
+  }
+}
+
+void AOHSWeapon::OnFireOrder()
+{
+  UE_LOG(OHS, Warning, TEXT("Fire!!!!"));
+}

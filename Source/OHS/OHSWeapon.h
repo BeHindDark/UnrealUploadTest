@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "EngineMinimal.h"
+#include "OHS/OHS.h"
 #include "GameFramework/Actor.h"
 #include "OHSWeapon.generated.h"
 
@@ -50,4 +51,11 @@ protected:
 
 private:
   class ATPSCharacter* TPSCharacter;
+  class UFireControlSystem* FireControlSystem;
+
+public:
+  void ConnectFireControlSystem(class UFireControlSystem* NewFireControlSystem);
+
+private:
+  void OnFireOrder();
 };
