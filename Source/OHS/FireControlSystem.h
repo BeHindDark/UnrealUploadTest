@@ -40,7 +40,6 @@ public:
 
   TArray<class AOHSWeapon*> WeaponArray;
 
-private:
   TArray<TSubclassOf<class AOHSWeapon>> WeaponClassArray;
   
 };
