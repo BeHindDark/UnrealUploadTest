@@ -99,5 +99,9 @@ private:
 
   //player Action input functions
 
-  
+  //LMB down : Fire
+  void StartFire();
+
+  //LMB release : stopFire
+  void StopFire();
 };

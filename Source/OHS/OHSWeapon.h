@@ -3,6 +3,7 @@
 #pragma once
 
 #include "EngineMinimal.h"
+#include "OHS/OHS.h"
 #include "GameFramework/Actor.h"
 #include "OHSWeapon.generated.h"
 

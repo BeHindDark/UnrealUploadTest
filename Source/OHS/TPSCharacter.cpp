@@ -57,8 +57,6 @@ ATPSCharacter::ATPSCharacter()
   Zeroing = 1000.0f;
   AimingRange = 10000.0f;
   AimingLocation = FVector::ZeroVector;
-   
-  
 }
 
 // Called when the game starts or when spawned
@@ -66,8 +64,7 @@ void ATPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-  //Attach Weapon
-  
+  AimingLocation = GetActorLocation() + GetActorForwardVector()*10000.0;
 }
 
 void ATPSCharacter::OnConstruction(const FTransform & Transform)
@@ -149,10 +146,9 @@ void ATPSCharacter::Tick(float DeltaTime)
     }
   }
 
-  for(AOHSWeapon* Weapon : WeaponArray)
-  {
-    Weapon->TargetLocation = AimingLocation;
-  }
+  FireControlSystem->TargetLocation = AimingLocation;
+  FireControlSystem->BodyRotation = GetActorRotation();
+  
 }
 
 // Called to bind functionality to input
@@ -166,6 +162,10 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
   PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATPSCharacter::MoveFrontBack);
   PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ATPSCharacter::MoveRightLeft);
   PlayerInputComponent->BindAxis(TEXT("TurnBody"), this, &ATPSCharacter::TurnCharacter);
+
+  //Ation Binding
+  PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &ATPSCharacter::StartFire);
+  PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Released, this, &ATPSCharacter::StopFire);
 }
 
 //mouse Y : TPCamera Peach Controll
@@ -196,4 +196,13 @@ void ATPSCharacter::MoveRightLeft(float NewAxisValue)
 void ATPSCharacter::TurnCharacter(float NewAxisValue)
 {
   AddControllerYawInput(NewAxisValue);
+}
+
+void ATPSCharacter::StartFire()
+{
+  FireControlSystem->OnFireOrder.Broadcast();
+}
+
+void ATPSCharacter::StopFire()
+{
 }
