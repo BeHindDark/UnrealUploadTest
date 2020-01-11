@@ -23,12 +23,21 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Collision)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	UStaticMeshComponent* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	UCameraComponent* Cameral;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	float RPM;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	USpringArmComponent* SpringArm;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	float Damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	float FinalDamage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	float Test;
+
+
 };

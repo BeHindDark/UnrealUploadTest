@@ -20,6 +20,9 @@ AWJTBullet::AWJTBullet()
 	}
 
 	Mesh->AddRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	//메시가 90도 돌아가있어서 Z축=yaw값을 -90도만큼 돌림
+
+	bCanBeDamaged = false;
 }
 
 // Called when the game starts or when spawned
