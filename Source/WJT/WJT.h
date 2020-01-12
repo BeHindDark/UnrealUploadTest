@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine.h"
+#include "Engineminimal.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(WJT, Log, All);
 
