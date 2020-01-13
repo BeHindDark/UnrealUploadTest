@@ -13,6 +13,7 @@ UFireControlSystem::UFireControlSystem()
   TargetLocation = FVector::ZeroVector;
   BodyRotation = FRotator::ZeroRotator;
 	// ...
+  //FireOrders.Add(FOnFireOrderDelegate());
 }
 
 

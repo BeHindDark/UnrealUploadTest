@@ -42,6 +42,8 @@ public:
   UPROPERTY(VisibleAnywhere, Category = FireControl)
   bool bEquality;
 
+  int WeaponIndex;
+
 protected:
   UPROPERTY(EditAnywhere, Category = Weapon)
   float YawRotationSpeed;
@@ -52,6 +54,7 @@ protected:
 private:
   class ATPSCharacter* TPSCharacter;
   class UFireControlSystem* FireControlSystem;
+  
 
 public:
   void ConnectFireControlSystem(class UFireControlSystem* NewFireControlSystem);

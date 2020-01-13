@@ -76,6 +76,8 @@ private:
 
   TArray<class AOHSWeapon*> WeaponArray;
 
+  TArray<const USkeletalMeshSocket *> SocketArray;
+
   //custom functions
 private:
   //private custom functions

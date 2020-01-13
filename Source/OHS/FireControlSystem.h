@@ -40,6 +40,13 @@ public:
 
   TArray<class AOHSWeapon*> WeaponArray;
 
-  TArray<TSubclassOf<class AOHSWeapon>> WeaponClassArray;
+  TArray<const USkeletalMeshSocket *> SocketArray;
+  
+  UPROPERTY(VisibleAnywhere, Category = FireControlSystem)
+  TArray<FTransform> SocketTransforms; 
+
+  TArray<TSubclassOf<class AOHSWeapon>*> WeaponClassArray;
+
+  //TArray<FOnFireOrderDelegate> FireOrders;
   
 };
