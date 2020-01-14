@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "EngineMinimal.h"
+#include "OHS/OHS.h"
 #include "Components/ActorComponent.h"
 #include "FireControlSystem.generated.h"
 

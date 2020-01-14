@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "EngineMinimal.h"
 #include "OHS/OHS.h"
 #include "GameFramework/Character.h"
 #include "TPSCharacter.generated.h"
