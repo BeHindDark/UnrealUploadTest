@@ -47,38 +47,48 @@ void AOHSWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+  //아래 if문 안의 내용들은 추후 함수에 박아넣고 좀더 깔끔히 정리할 예정입니다.
   //FireControlSystem과 제대로 연결되었는가
   if((FireControlSystem!=nullptr)&&(WeaponIndex!=-1))
   {
     //소켓 위치가 존재하는 가
-    if(FireControlSystem->SocketTransforms.Num()>=WeaponIndex+1)
+    if(FireControlSystem->SocketTransforms[WeaponIndex].IsValid())
     {
+      //Update TargetLocation
       TargetLocation = FireControlSystem->TargetLocation;
-      //포탑이 바라봐야 하는 방향 (rotation()을 쓰면 roll은 무조건 0이 나온다)
-      FRotator TargetDirection = (TargetLocation - GetActorLocation()).Rotation();
+
+      //현재 달려있는 소켓의 좌표계를 받아온다.
+      FTransform SocketTransform = FireControlSystem->SocketTransforms[WeaponIndex];
       
-      //현재 본체 소켓의 방향
-      FRotator BodyRotation = FireControlSystem->SocketTransforms[WeaponIndex].GetRotation().Rotator();
+      //소켓을 기준으로 했을 때 타켓의 위치를 구한 뒤
+      //ToOrientationRotator로 해당 위치를 바라보도록 하는 rotation을 구한다. 이때 roll=0으로 고정된다.
+      FRotator RelativeTargetDirection = FTransform(FRotator::ZeroRotator,TargetLocation).GetRelativeTransform(SocketTransform).GetLocation().ToOrientationRotator();
+      
+      //목표지점을 바라보기 위해 포탑이 가져야하는 상대회전값
+      //ClampAngle을 통해 최대 부앙각을 제한시킨다.
+      FRotator TargetRelativeRotation = FRotator(FMath::ClampAngle(RelativeTargetDirection.Pitch,-20.0f,60.0f),
+                                                 RelativeTargetDirection.Yaw,
+                                                 0.0f);
+      
+      //소켓에 대한 포탑의 현재 rotation
+      FRotator CurRelativeRotation = GetActorTransform().GetRelativeTransform(SocketTransform).Rotator();
 
-      //목표지점을 바라보기 위한 포탑의 상대회전 값
-      FRotator TargetRelativeRotation = FRotator(FMath::ClampAngle(TargetDirection.Pitch - BodyRotation.Pitch,-20.0f,60.0f),
-                                                  TargetDirection.Yaw - BodyRotation.Yaw,
-                                                  0.0f);
+      //타겟을 바라보게 하기 위해 회전시켜야 하는 총각도
+      FRotator RotationDiff = FRotator::ZeroRotator;
+      //덜어내기 용 더미 각도
+      FRotator Dummyrot = FRotator::ZeroRotator;
 
-      //이미 해당 방향 인근을 바라보고 있다면 굳이 열심히 계산하지 말고 걍 그쪽으로 정렬시키기
-      if(TargetDirection.Equals(GetActorRotation(),0.0001f))
+      //두 각도의 차이를 구한 뒤 -180 ~ 180의 값을 가지도록 나누어서 나머지를 RotationDiff에 준다.
+      (TargetRelativeRotation - CurRelativeRotation).GetWindingAndRemainder(Dummyrot, RotationDiff);
+
+      //만약 거의 값이 같아서 돌릴필요가 없으면 돌리지 않는다.
+      if(RotationDiff.IsNearlyZero(0.001f))
       {
-        SetActorRelativeRotation(TargetRelativeRotation);
         bLocked = true;
       }
       else
       {
-        //현재 본체에 대한 상대회전
-        FRotator CurRelativeRotation = GetActorRotation()- BodyRotation;
-
-        //타겟을 바라보게 하기 위해 회전시켜야 하는 총각도
-        FRotator RotationDiff = TargetRelativeRotation - CurRelativeRotation;
-
+        bLocked = false;
         //실제로 돌릴각도 (빈 공간)
         FRotator DeltaRotation = FRotator::ZeroRotator;
 
@@ -105,13 +115,14 @@ void AOHSWeapon::Tick(float DeltaTime)
         }
 
         //현재상대회전 + 돌릴각도 = 새 상대회전
-        SetActorRelativeRotation(CurRelativeRotation + DeltaRotation);
-        bLocked = false;
+        //굳이 이렇게 한단계 거치는 이유는 본체나 포탑이 너무 빠르게 회전할 경우 Roll값이 조금씩 돌아가는 문제가 있기 때문입니다.
+        //부동소수점 연산에서 생기는 찌꺼기 값이 계속 누적되서 일지도...
+        FRotator NewRelativeRotation = CurRelativeRotation + DeltaRotation;
+        NewRelativeRotation.Roll = 0.0f;
+        SetActorRelativeRotation(NewRelativeRotation);
       }
-    //AddActorWorldRotation(DeltaRotation);
     }
   }
-
 }
 
 void AOHSWeapon::SetOwner(AActor * NewOwner)

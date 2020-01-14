@@ -24,7 +24,7 @@ ATPSCharacter::ATPSCharacter()
   BoxCollision->SetupAttachment(GetCapsuleComponent());
 
   //위치 및 크기 조정
-  GetMesh()->SetRelativeLocationAndRotation(FVector(50.0f, 0.0f, -120.0f), FRotator(0.0f, -90.0f, 0.0f));
+  GetMesh()->SetRelativeLocationAndRotation(FVector(50.0f, 0.0f, -120.0f), FRotator(10.0f, -90.0f, 20.0f));
   SpringArm->TargetArmLength = 800.0f;
   SpringArm->SocketOffset = FVector(0.0f, 0.0f, 300.0f);
   BoxCollision->SetRelativeLocation(FVector(-10.0f, 0.0f, 30.0f));
