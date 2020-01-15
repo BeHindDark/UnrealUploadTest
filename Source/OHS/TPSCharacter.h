@@ -3,6 +3,7 @@
 #pragma once
 
 #include "OHS/OHS.h"
+#include "Engine/SkeletalMeshSocket.h"
 #include "GameFramework/Character.h"
 #include "TPSCharacter.generated.h"
 

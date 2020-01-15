@@ -46,9 +46,9 @@ ATPSCharacter::ATPSCharacter()
 
   //Load AnimationBlueprint
 
-
+  
   //SetDefaults
-
+  
   //Set Sockets
   TopWeaponSocket = GetMesh()->GetSocketByName(TEXT("Mount_Top"));
   SocketArray.Add(GetMesh()->GetSocketByName(TEXT("Mount_Top")));
@@ -180,6 +180,8 @@ void ATPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
   //Ation Binding
   PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Pressed, this, &ATPSCharacter::StartFire);
   PlayerInputComponent->BindAction(TEXT("Fire"), EInputEvent::IE_Released, this, &ATPSCharacter::StopFire);
+
+  
 }
 
 //mouse Y : TPCamera Peach Controll
