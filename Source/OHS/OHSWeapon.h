@@ -23,41 +23,40 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-  virtual void SetOwner(AActor* NewOwner) override;
-
 public:
-  UPROPERTY(VisibleAnywhere, Category = Weapon)
-  USkeletalMeshComponent* WeaponMesh;
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	USkeletalMeshComponent* WeaponMesh;
 
-  UPROPERTY(VisibleAnywhere, Category = Weapon)
-  USceneComponent* Sceneroot;
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	USceneComponent* Sceneroot;
 
-  UPROPERTY(VisibleAnywhere, Category = FireControl)
-  FVector TargetLocation;
+	UPROPERTY(VisibleAnywhere, Category = FireControl)
+	FVector TargetLocation;
 
-  UPROPERTY(VisibleAnywhere, Category = FireControl)
-  bool bLocked;
+	UPROPERTY(VisibleAnywhere, Category = FireControl)
+	bool bLocked;
 
-  UPROPERTY(VisibleAnywhere, Category = FireControl)
-  bool bEquality;
+	UPROPERTY(VisibleAnywhere, Category = FireControl)
+	bool bEquality;
 
-  int WeaponIndex;
+	int WeaponIndex;
 
 protected:
-  UPROPERTY(EditAnywhere, Category = Weapon)
-  float YawRotationSpeed;
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	float YawRotationSpeed;
 
-  UPROPERTY(EditAnywhere, Category = Weapon)
-  float PitchRotationSpeed;
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	float PitchRotationSpeed;
 
-private:
-  class ATPSCharacter* TPSCharacter;
-  class UFireControlSystem* FireControlSystem;
-  
+	class UFireControlSystem* FireControlSystem;
+	
 
 public:
-  void ConnectFireControlSystem(class UFireControlSystem* NewFireControlSystem);
+	void ConnectFireControlSystem(class UFireControlSystem* NewFireControlSystem);
+
+protected:
+	void TurnTowardDirectAim(float DeltaTime);
 
 private:
-  void OnFireOrder();
+	void OnFireOrder();
 };

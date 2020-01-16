@@ -31,23 +31,18 @@ public:
 
 		
 public:
-  UPROPERTY(VisibleAnywhere, Category = FireControlSystem)
-  FVector TargetLocation;
+	UPROPERTY(VisibleAnywhere, Category = FireControlSystem)
+	FVector TargetLocation;
 
-  UPROPERTY(VisibleAnywhere, Category = FireControlSystem)
-  FRotator BodyRotation;
+	FOnFireOrderDelegate OnFireOrder;
 
-  FOnFireOrderDelegate OnFireOrder;
+	TArray<class AOHSWeapon*> WeaponArray;
+	
+	UPROPERTY(VisibleAnywhere, Category = FireControlSystem)
+	TArray<FTransform> SocketTransforms; 
 
-  TArray<class AOHSWeapon*> WeaponArray;
+	TArray<TSubclassOf<class AOHSWeapon>*> WeaponClassArray;
 
-  TArray<const USkeletalMeshSocket *> SocketArray;
-  
-  UPROPERTY(VisibleAnywhere, Category = FireControlSystem)
-  TArray<FTransform> SocketTransforms; 
-
-  TArray<TSubclassOf<class AOHSWeapon>*> WeaponClassArray;
-
-  //TArray<FOnFireOrderDelegate> FireOrders;
-  
+	//TArray<FOnFireOrderDelegate> FireOrders;
+	
 };
