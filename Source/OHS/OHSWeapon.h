@@ -39,14 +39,14 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = FireControl)
 	bool bEquality;
 
-	int WeaponIndex;
+	int WeaponIndex = -1;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = Weapon)
-	float YawRotationSpeed;
+	float YawRotationSpeed = 60.0f;
 
 	UPROPERTY(EditAnywhere, Category = Weapon)
-	float PitchRotationSpeed;
+	float PitchRotationSpeed = 30.0f;
 
 	class UFireControlSystem* FireControlSystem;
 	

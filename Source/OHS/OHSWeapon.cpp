@@ -29,8 +29,6 @@ AOHSWeapon::AOHSWeapon()
 	WeaponMesh->SetRelativeLocationAndRotation(FVector::ZeroVector,FRotator(90.0f,0.0f,90.0f));
 	//SkeletalMesh'/Game/Mech_Constructor_Spiders/Meshes_Skeletal/Weapons/Weapon_Double_Gun_Lvl3.Weapon_Double_Gun_Lvl3'
 
-	PitchRotationSpeed = 15.0f;
-	YawRotationSpeed = 30.0f;
 	TargetLocation = FVector::ZeroVector;
 	WeaponIndex = -1;
 }

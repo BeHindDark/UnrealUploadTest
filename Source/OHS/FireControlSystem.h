@@ -3,7 +3,6 @@
 #pragma once
 
 #include "OHS/OHS.h"
-#include "Engine/SkeletalMeshSocket.h"
 #include "Components/ActorComponent.h"
 #include "FireControlSystem.generated.h"
 

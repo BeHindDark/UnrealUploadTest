@@ -52,14 +52,20 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = FireControlSystem)
 	class UFireControlSystem* FireControlSystem;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement)
+	float MoveInput = 0.0f;
+
 protected:
-	UPROPERTY(EditAnywhere, Category = Camera)
+	UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
 	float CameraYawSpeed;
 
-	UPROPERTY(EditAnywhere, Category = Camera)
+	UPROPERTY(EditAnywhere, Category = Camera, Meta = (AllowPrivateAccess = true))
 	float CameraPitchSpeed;
 
-	UPROPERTY(EditAnywhere, Category = FireControlSystem)
+	UPROPERTY(EditAnywhere,Category = Movement,Meta = (AllowPrivateAccess = true))
+	float BodyYawSpeed = 0.3;
+
+	UPROPERTY(EditAnywhere, Category = FireControlSystem, Meta = (AllowPrivateAccess = true))
 	float AimingRange;
 
 	UPROPERTY(VisibleAnywhere, Category = FireControlSystem, Meta = (AllowPrivateAccess = true))
@@ -71,7 +77,7 @@ private:
 	float CameraYawMovement;
 	float CameraPitchMovement;
 	bool bIsPlayerControlling;
-		
+
 
 	//custom functions
 

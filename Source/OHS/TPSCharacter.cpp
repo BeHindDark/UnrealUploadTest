@@ -24,11 +24,13 @@ ATPSCharacter::ATPSCharacter()
 	BoxCollision->SetupAttachment(GetCapsuleComponent());
 
 	//위치 및 크기 조정
-	GetMesh()->SetRelativeLocationAndRotation(FVector(50.0f, 0.0f, -120.0f), FRotator(10.0f, -90.0f, 20.0f));
+	GetMesh()->SetRelativeLocationAndRotation(FVector(50.0f, 0.0f, -120.0f), FRotator(0.0f, -90.0f, 0.0f));
 	SpringArm->TargetArmLength = 800.0f;
 	SpringArm->SocketOffset = FVector(0.0f, 0.0f, 300.0f);
 	BoxCollision->SetRelativeLocation(FVector(-10.0f, 0.0f, 30.0f));
 	BoxCollision->SetBoxExtent(FVector(150.0f, 150.0f, 50.0f));
+
+	//속도 조정
 	CameraYawSpeed = 120.0f;
 	CameraPitchSpeed = 60.0f;
 	
@@ -36,6 +38,8 @@ ATPSCharacter::ATPSCharacter()
 	SpringArm->bInheritYaw = false;
 	SpringArm->bInheritRoll = false;
 	TPCamera->bUsePawnControlRotation=false;
+
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 30.0f, 0.0f);
 
 	//Load SkeletalMesh
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_SpiderMid(TEXT("/Game/Mech_Constructor_Spiders/Meshes_Skeletal/Legs_Spiders/Legs_Spider_Med.Legs_Spider_Med"));
@@ -46,7 +50,9 @@ ATPSCharacter::ATPSCharacter()
 
 	//Load AnimationBlueprint
 
-	
+	//콜리젼 설정
+	BoxCollision->SetCollisionProfileName(TEXT("Pawn"));
+
 	//SetDefaults
 	
 	//  Set Sockets
@@ -55,6 +61,8 @@ ATPSCharacter::ATPSCharacter()
 	//  FireControlSystem Defaults
 	AimingRange = 10000.0f;
 	AimingLocation = FVector::ZeroVector;
+
+
 }
 
 // Called when the game starts or when spawned
@@ -203,19 +211,40 @@ void ATPSCharacter::TurnCamera(float NewAxisValue)
 //WS : MoveForward or Backward
 void ATPSCharacter::MoveFrontBack(float NewAxisValue)
 {
+	MoveInput = NewAxisValue;
 	AddMovementInput(GetActorForwardVector(),NewAxisValue);
 }
 
 //AD : Move Right or Left
 void ATPSCharacter::MoveRightLeft(float NewAxisValue)
 {
-	AddMovementInput(GetActorRightVector(),NewAxisValue);
+	//실제 속도를 받아야할 경우를 대비해 박아둠.
+	/*
+	//자기 자신을 기준으로 봤을 때 속도
+	float forward_speed = FVector::DotProduct(GetVelocity(), GetActorForwardVector());
+	*/
+	//
+	if(FMath::IsNearlyEqual(MoveInput,0.0f,0.01f))
+	{
+		AddMovementInput(GetActorRightVector(),NewAxisValue);
+	}
+	else
+	{
+		if(MoveInput>0.0f)
+		{
+			AddControllerYawInput(NewAxisValue*BodyYawSpeed);
+		}
+		else
+		{
+			AddControllerYawInput(-NewAxisValue*BodyYawSpeed);
+		}
+	}
 }
 
 //QE : Character Yaw Controll
 void ATPSCharacter::TurnCharacter(float NewAxisValue)
 {
-	AddControllerYawInput(NewAxisValue);
+	AddControllerYawInput(NewAxisValue*BodyYawSpeed);
 }
 
 void ATPSCharacter::StartFire()
