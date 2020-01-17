@@ -25,4 +25,26 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+
+	UPROPERTY(VisibleAnywhere)
+	int32 Damage;
+
+	UPROPERTY(VisibleAnywhere)
+	float CurrentDamage;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 MaxMagazine;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 CurrentMagazine;
+
+public:
+
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* WeaponMesh;
+
+	void SetDamage(int32 D);
+
+	void ShootBullet();
 };

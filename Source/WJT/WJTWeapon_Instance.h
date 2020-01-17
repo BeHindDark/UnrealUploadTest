@@ -17,7 +17,7 @@ class WJT_API AWJTWeapon_Instance : public AWJTWeapon
 	
 
 public:
-
+	AWJTWeapon_Instance();
 
 private:
 

@@ -18,9 +18,13 @@ class WJT_API AWJTWeapon_Projectile : public AWJTWeapon
 
 public:
 
+	AWJTWeapon_Projectile();
+
 
 private:
 
+	UPROPERTY(VisibleAnywhere)
+	float Delay;
 
 protected:
 

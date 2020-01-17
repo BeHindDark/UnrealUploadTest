@@ -3,3 +3,6 @@
 
 #include "WJTWeapon_Projectile.h"
 
+AWJTWeapon_Projectile::AWJTWeapon_Projectile() {
+
+}
