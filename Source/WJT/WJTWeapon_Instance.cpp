@@ -3,3 +3,6 @@
 
 #include "WJTWeapon_Instance.h"
 
+AWJTWeapon_Instance::AWJTWeapon_Instance() {
+
+}
