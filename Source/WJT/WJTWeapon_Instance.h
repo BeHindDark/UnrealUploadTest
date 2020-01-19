@@ -15,14 +15,16 @@ class WJT_API AWJTWeapon_Instance : public AWJTWeapon
 
 	//원본은 ShooterWeapon하나만 참조
 	
+protected:
 
-public:
-	AWJTWeapon_Instance();
-
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* InstanceBullet;
 private:
 
 
-protected:
+public:
+
+	AWJTWeapon_Instance();
 
 
 };

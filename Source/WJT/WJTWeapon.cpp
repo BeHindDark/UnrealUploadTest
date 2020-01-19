@@ -35,3 +35,11 @@ void AWJTWeapon::SetDamage(int32 D) {
 	Damage = D;
 }
 
+void AWJTWeapon::ShootBullet() {
+
+}
+
+void AWJTWeapon::ReloadMagazine() {
+	CurrentMagazine = MaxMagazine;
+}
+

@@ -13,14 +13,13 @@ class WJT_API AWJTProjectile_Bullet : public AWJTWeapon_Projectile
 {
 	GENERATED_BODY()
 
-public:
+protected:
 
-	AWJTProjectile_Bullet();
 
 private:
-	
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* BulletMesh;
 
-	
+
+public:
+
+    AWJTProjectile_Bullet();
 };

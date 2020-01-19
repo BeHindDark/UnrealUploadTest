@@ -10,10 +10,6 @@ UCLASS()
 class WJT_API AWJTWeapon : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AWJTWeapon();
 
 
 
@@ -25,13 +21,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-private:
+	AWJTWeapon();
+
+
+protected:
+
 
 	UPROPERTY(VisibleAnywhere)
 	int32 Damage;
 
 	UPROPERTY(VisibleAnywhere)
-	float CurrentDamage;
+	float TotalDamage;
 
 	UPROPERTY(VisibleAnywhere)
 	int32 MaxMagazine;
@@ -39,12 +39,20 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	int32 CurrentMagazine;
 
+
+
+private:
+
+
+
 public:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* WeaponMesh;
-
+	
 	void SetDamage(int32 D);
 
 	void ShootBullet();
+
+	void ReloadMagazine();
 };
