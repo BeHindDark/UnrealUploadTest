@@ -48,6 +48,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Weapon)
 	float PitchRotationSpeed = 30.0f;
 
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	float YawRotationLimit[2];
+
+	UPROPERTY(EditAnywhere, Category = Weapon)
+	float PitchRotationLimit[2];
+
 	class UFireControlSystem* FireControlSystem;
 	
 

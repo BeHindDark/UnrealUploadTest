@@ -4,6 +4,7 @@
 
 #include "OHS/OHS.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Engine/StaticMeshSocket.h"
 #include "GameFramework/Character.h"
 #include "TPSCharacter.generated.h"
 
@@ -43,8 +44,14 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Camera)
 	UCameraComponent* TPCamera;
 
-	UPROPERTY(VisibleAnywhere, Category = CollisionBox)
-	UBoxComponent* BoxCollision;
+	UPROPERTY(VisibleAnywhere,Category = Body)
+	USceneComponent* TurretRoot;
+
+	UPROPERTY(VisibleAnywhere, Category = Body)
+	UStaticMeshComponent* UpperBody;
+
+	UPROPERTY(VisibleAnywhere,Category = Body)
+	UStaticMeshComponent* Cockpit;
 
 	UPROPERTY(VisibleAnywhere, Category = Controller)
 	APlayerController* PlayerController;
@@ -71,18 +78,26 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = FireControlSystem, Meta = (AllowPrivateAccess = true))
 	FVector AimingLocation;
 
-	TArray<const USkeletalMeshSocket*> SocketArray;
+	UPROPERTY(EditAnywhere, Category = BaseStat, Meta = (AllowPrivateAccess = true))
+	float UpperBodyRotationSpeed = 40.0;
+
+	TArray<const UStaticMeshSocket*> SocketArray;
+
+	TArray<UStaticMeshComponent*> SocketMotherArray;
 
 private:
 	float CameraYawMovement;
-	float CameraPitchMovement;
-	bool bIsPlayerControlling;
 
+	float CameraPitchMovement;
+
+	bool bIsPlayerControlling;
 
 	//custom functions
 
 protected:
 	FVector GetCameraAimLocation(UCameraComponent* CurrentCamera);
+
+	void TurnUpperBody(USkeletalMeshComponent* LowerBody, USceneComponent* TurretRoot, FName SocketName, float DeltaTime);
 
 private:
 	//private custom functions

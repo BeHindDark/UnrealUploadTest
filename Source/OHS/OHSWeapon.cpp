@@ -19,8 +19,12 @@ AOHSWeapon::AOHSWeapon()
 	WeaponMesh->SetupAttachment(Sceneroot);
 
 	//위치/회전 설정
- 
-	//Load SkeletalMEsh
+	YawRotationLimit[0] = -20.0f;
+	YawRotationLimit[1] = 40.0f;
+	PitchRotationLimit[0] = -10.0f;
+	PitchRotationLimit[1] = 15.0f;
+
+	//Load SkeletalMesh
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_DEFAULTWEAPON(TEXT("/Game/Mech_Constructor_Spiders/Meshes_Skeletal/Weapons/Weapon_Double_Gun_Lvl3.Weapon_Double_Gun_Lvl3"));
 	if(SK_DEFAULTWEAPON.Succeeded())
 	{
@@ -84,6 +88,7 @@ void AOHSWeapon::TurnTowardDirectAim(float DeltaTime)
 	TargetLocation = FireControlSystem->TargetLocation;
 
 	//현재 달려있는 소켓의 좌표계를 받아온다.
+	
 
 	FTransform SocketTransform = FireControlSystem->SocketTransforms[WeaponIndex];
 
@@ -93,8 +98,9 @@ void AOHSWeapon::TurnTowardDirectAim(float DeltaTime)
 
 	//목표지점을 바라보기 위해 포탑이 가져야하는 상대회전값
 	//ClampAngle을 통해 최대 부앙각을 제한시킨다.
-	FRotator TargetRelativeRotation = FRotator(FMath::ClampAngle(RelativeTargetDirection.Pitch,-20.0f,60.0f),
-												RelativeTargetDirection.Yaw,
+	
+	FRotator TargetRelativeRotation = FRotator(FMath::ClampAngle(RelativeTargetDirection.Pitch, PitchRotationLimit[0],PitchRotationLimit[1]),
+											   FMath::ClampAngle(RelativeTargetDirection.Yaw, YawRotationLimit[0], YawRotationLimit[1]),
 												0.0f);
 
 	//소켓에 대한 포탑의 현재 rotation
@@ -145,6 +151,8 @@ void AOHSWeapon::TurnTowardDirectAim(float DeltaTime)
 		//굳이 이렇게 한단계 거치는 이유는 본체나 포탑이 너무 빠르게 회전할 경우 Roll값이 조금씩 돌아가는 문제가 있기 때문입니다.
 		//부동소수점 연산에서 생기는 찌꺼기 값이 계속 누적되서 일지도...
 		FRotator NewRelativeRotation = CurRelativeRotation + DeltaRotation;
+		NewRelativeRotation.Pitch = FMath::ClampAngle(NewRelativeRotation.Pitch, PitchRotationLimit[0], PitchRotationLimit[1]);
+		NewRelativeRotation.Yaw = FMath::ClampAngle(NewRelativeRotation.Yaw, YawRotationLimit[0], YawRotationLimit[1]);
 		NewRelativeRotation.Roll = 0.0f;
 		SetActorRelativeRotation(NewRelativeRotation);
 	}
